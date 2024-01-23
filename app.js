@@ -3,11 +3,12 @@ const express = require("express");
 const ExpressWs = require("express-ws");
 const colors = require('colors');
 
-
 const { GptService } = require("./services/gpt-service");
 const { StreamService } = require("./services/stream-service");
 const { TranscriptionService } = require("./services/transcription-service");
 const { TextToSpeechService } = require("./services/tts-service");
+
+const findProfile = require("./functions/findProfile")
 
 const app = express();
 ExpressWs(app);
@@ -20,7 +21,9 @@ app.post("/incoming", (req, res) => {
   res.end(`
   <Response>
     <Connect>
-      <Stream url="wss://${process.env.SERVER}/connection" />
+      <Stream url="wss://${process.env.SERVER}/connection">
+        <Parameter name="id" value="${process.env.TO_NUMBER}" />
+      </Stream>
     </Connect>
   </Response>
   `);
@@ -28,8 +31,9 @@ app.post("/incoming", (req, res) => {
 
 app.ws("/connection", (ws, req) => {
   ws.on("error", console.error);
+
   // Filled in from start message
-  let streamSid;
+  let streamSid, profile;
 
   const gptService = new GptService();
   const streamService = new StreamService(ws);
@@ -42,11 +46,17 @@ app.ws("/connection", (ws, req) => {
   // Incoming from MediaStream
   ws.on("message", function message(data) {
     const msg = JSON.parse(data);
-    if (msg.event === "start") {
+    if(msg.event === "start") {
+      profile = findProfile(msg.start.customParameters.id);
+      gptService.userContext.push({
+        role: "function",
+        name: "findProfile",
+        content: JSON.stringify(profile)
+      });
       streamSid = msg.start.streamSid;
       streamService.setStreamSid(streamSid);
       console.log(`Twilio -> Starting Media Stream for ${streamSid}`.underline.red);
-      ttsService.generate({partialResponseIndex: null, partialResponse: "Hello! I understand you're looking for a pair of AirPods, is that correct?"}, 1);
+      ttsService.generate({partialResponseIndex: null, partialResponse: process.env.WELCOME_MESSAGE }, 1);
     } else if (msg.event === "media") {
       transcriptionService.send(msg.media.payload);
     } else if (msg.event === "mark") {

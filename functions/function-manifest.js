@@ -3,25 +3,14 @@ const tools = [
   {
     type: "function",
     function: {
-      name: "checkInventory",
-      description: "Check the inventory of airpods, airpods pro or airpods max.",
-      parameters: {
-        type: "object",
-        properties: {
-          model: {
-            type: "string",
-            "enum": ["airpods", "airpods pro", "airpods max"],
-            description: "The model of airpods, either the airpods, airpods pro or airpods max",
-          },
-        },
-        required: ["model"],
-      },
+      name: "findProfile",
+      description: "Gets the profile of the customer from Segment.",
       returns: {
         type: "object",
         properties: {
-          stock: {
-            type: "integer",
-            description: "An integer containing how many of the model are in currently in stock."
+          price: {
+            type: "object",
+            description: "profile object of the customer from database"
           }
         }
       }
@@ -30,62 +19,66 @@ const tools = [
   {
     type: "function",
     function: {
-      name: "checkPrice",
-      description: "Check the price of given model of airpods, airpods pro or airpods max.",
+      name: "getAllBookings",
+      description: "Get all the bookings for a particular user. this action can be used to find all of the bookings in a user's account so you can ask which one they are calling about.",
       parameters: {
         type: "object",
         properties: {
-          model: {
+          userId: {
             type: "string",
-            "enum": ["airpods", "airpods pro", "airpods max"],
-            description: "The model of airpods, either the airpods, airpods pro or airpods max",
+            description: "the id of the user whose bookings we want to look up, must start with a +",
           },
         },
-        required: ["model"],
+        required: ["userId"],
       },
       returns: {
-        type: "object",
-        properties: {
-          price: {
-            type: "integer",
-            description: "the price of the model"
-          }
-        }
+        type: "array",
+        description: "an array of all the bookings this user's account has"
       }
     },
   },
   {
     type: "function",
     function: {
-      name: "placeOrder",
-      description: "Places an order for a set of airpods.",
+      name: "getBooking",
+      description: "Get a particular booking from a customers' account",
       parameters: {
         type: "object",
         properties: {
-          model: {
+          userId: {
             type: "string",
-            "enum": ["airpods", "airpods pro"],
-            description: "The model of airpods, either the regular or pro",
+            description: "the id of the user whose most recent booking we want to look up. must start with +",
           },
-          quantity: {
+          bookingId: {
             type: "integer",
-            description: "The number of airpods they want to order",
+            description: "the id of the booking the user is calling about",
           },
         },
-        required: ["type", "quantity"],
+        required: ["userId", "bookingId"],
       },
       returns: {
         type: "object",
+        description: "an object containing the listing details and chat transcript of the most recent booking for this customer."
+      }
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "refundLateCheckoutFee",
+      description: "refunds the checkout fee on a particular booking.",
+      parameters: {
+        type: "object",
         properties: {
-          price: {
+          booking_id: {
             type: "integer",
-            description: "The total price of the order including tax"
+            description: "initiates the refund of the late checkout fee on a particular booking.",
           },
-          orderNumber: {
-            type: "integer",
-            description: "The order number associated with the order."
-          }
-        }
+        },
+        required: ["booking_id"],
+      },
+      returns: {
+        type: "boolean"
       }
     },
   },
