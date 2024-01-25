@@ -8,15 +8,26 @@ function pause(milliseconds) {
 function callHostToConfirm({callSid, phone_number}) {
     console.log("callHostToConfirm", callSid, phone_number);
 
-    client.calls.create({
-      method: "POST",
-      url: `https://${process.env.SERVER}/incoming?memSid=${callSid}`,
-      to: process.env.TO_NUMBER,
-      from: process.env.FROM_NUMBER
-    })
-   .then(call=>call)
+    client.calls(callSid).update({
+        twiml: "<Response><Say>We have recorded your complaint and will follow up with you shortly.</Say></Response>"
+    }).then(call=>{
+      client.calls.list({to: phone_number, limit: 20})
+        .then(calls=>{
+          for(const call of calls)
+            if(call.status === "ringing" || call.status === "in-progress") return;
 
-   pause(3000);
+          pause(1000);
+          client.calls.create({
+            method: "POST",
+            url: `https://${process.env.SERVER}/incoming?memSid=${callSid}`,
+            to: phone_number,
+            from: process.env.FROM_NUMBER
+          })
+          .then(call=>call)
+        });
+    });
+
+   pause(4000);
 
    return "true"
 }

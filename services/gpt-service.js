@@ -39,6 +39,9 @@ class GptService extends EventEmitter {
             all the relevant details from the guest. If the guest says they had a 
             conversation with the host, ask what they had discussed and agreed upon
             before calling the host to confirm if the guest has told the truth
+          Before calling the host, make sure you let the guest know that's what you're
+            going to do and that you will get back to the guest once you have gathered
+            more information.
           Always stay on topic, only keep the conversation within the scope of the users's
             recent stays or a topic related to their experience with AirBNB. Don't discuss
             anything that's not within this scope.
