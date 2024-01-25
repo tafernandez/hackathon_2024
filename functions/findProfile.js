@@ -8,8 +8,12 @@ const db = {
     }
 };
 
-function findProfile(id) {
-   return db[id] || { name: "Unknown" } 
+const axios = require("axios");
+
+async function findProfile(id) {
+    const req = await axios.get("https://sienna-pheasant-5324.twil.io/profile")
+        .catch(function(err) { return err.response })
+    return req.data
 }
 
 module.exports = findProfile;

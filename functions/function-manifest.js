@@ -82,6 +82,30 @@ const tools = [
       }
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "callHostToConfirm",
+      description: "calls the host to gather more information about the matter",
+      parameters: {
+        type: "object",
+        properties: {
+          phone_number: {
+            type: "string",
+            description: "the phone number associated to the host of the listing.",
+          },
+          callSid: {
+            type: "string",
+            description: "the callSid from the initial call that was responded which we are trying to resolve.",
+          },
+        },
+        required: ["callSid", "phone_number"],
+      },
+      returns: {
+        type: "boolean"
+      }
+    },
+  },
 ];
 
 module.exports = tools;

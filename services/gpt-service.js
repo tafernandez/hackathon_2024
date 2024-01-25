@@ -14,6 +14,7 @@ tools.forEach((tool) => {
 class GptService extends EventEmitter {
   constructor() {
     super();
+    this.calledHost = false;
     this.openai = new OpenAI();
     this.userContext = [
       { "role": "system",
@@ -29,8 +30,15 @@ class GptService extends EventEmitter {
             if absolutely necessary, figure out if the customer has the right 
             to a refund based on information about the listing and 
             any correspondence between the customer and the listing host.
-            If you determine the customer is in the wrong, politely let them know
+          If you determine the customer is in the wrong, politely let them know
             that there's nothing you can do to help them in this situation.
+          Don't assume anything, always confirm before moving forward with your path.
+          If you need to gather more information on the other side of the story from 
+            the host, you can initiate a call to the host and collect data from them
+            before making a determination as well. Don't call the host until you have
+            all the relevant details from the guest. If the guest says they had a 
+            conversation with the host, ask what they had discussed and agreed upon
+            before calling the host to confirm if the guest has told the truth
           Always stay on topic, only keep the conversation within the scope of the users's
             recent stays or a topic related to their experience with AirBNB. Don't discuss
             anything that's not within this scope.
@@ -45,7 +53,8 @@ class GptService extends EventEmitter {
   }
 
   async completion(text, interactionCount, role = "user", name = "user") {
-    if (name != "user") {
+    console.log(this.userContext[this.userContext.length-1])
+    if (name != "user" && name != "guest" && name != "host") {
       this.userContext.push({ "role": role, "name": name, "content": text })
     } else {
       this.userContext.push({ "role": role, "content": text })
@@ -99,6 +108,13 @@ class GptService extends EventEmitter {
         }
 
         const functionToCall = availableFunctions[functionName];
+
+        if(functionToCall === "callHostToConfirm") {
+          for(const context of this.userContext) {
+            if(context.name === "callHostToConfirm") return
+          }
+        }
+
         let functionResponse = functionToCall(functionArgs);
 
         // Step 4: send the info on the function call and function response to GPT
