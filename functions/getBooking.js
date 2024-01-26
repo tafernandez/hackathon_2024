@@ -7,7 +7,7 @@ const db = {
             startDate: "2023-12-13",
             endDate: "2023-12-17",
             hostPhoneNumber: process.env.TO_NUMBER,
-            //hostPhoneNumber: +12154025701,
+            hostPhoneNumber: +12154025701,
 
             bookingDetails: `
                 Beautiful 2bd 2ba home in the middle of town.
@@ -33,8 +33,8 @@ const db = {
             location: "Charlotte, NC",
             startDate: "2023-07-18",
             startDate: "2023-07-20",
-            hostPhoneNumber: process.env.TO_NUMBER,
-            //hostPhoneNumber: +12154025701,
+            //hostPhoneNumber: process.env.TO_NUMBER,
+            hostPhoneNumber: +12154025701,
             bookingDetails: `
                 Beautiful 2bd 1ba home in the middle of town.
                 Walking distance to basically everything.

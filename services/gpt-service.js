@@ -43,8 +43,7 @@ class GptService extends EventEmitter {
             going to do and that you will get back to the guest once you have gathered
             more information.
             Once you have finished talking to both the host and the guest, compile a JSON object 
-            with the following fields: airbnb_booking, host_transcription, guest_transcription, summary 
-            and final_conclusion, that will be passed into the function called createFlexTask.
+            with the following fields: summary_of_calls and conclusion, that will be passed into the function called createFlexTask.
           Always stay on topic, only keep the conversation within the scope of the users's
             recent stays or a topic related to their experience with AirBNB. Don't discuss
             anything that's not within this scope.
@@ -119,13 +118,6 @@ class GptService extends EventEmitter {
             if(context.name === "callHostToConfirm") return
           }
         }
-
-        // if(functionToCall === "createFlexTask") {
-        //   for(const context of this.userContext) {
-        //     console.log("looking at what context is for createFlexTask in gpt service: " + context)
-        //     if(context.name === "createFlexTask") return
-        //   }
-        // }
 
         let functionResponse = functionToCall(functionArgs);
 

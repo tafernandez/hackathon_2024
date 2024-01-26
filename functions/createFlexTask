@@ -3,6 +3,7 @@ const client = require('twilio')(process.env.FLEX_TWILIO_ACCOUNT_SID, process.en
 
 
 function createFlexTask({summary_of_calls, conclusion}) {
+    console.log("Task is being made...")
     console.log("Printing the summary of the calls...: " + summary_of_calls);
     console.log("Printing the conclusion of the calls...:" + conclusion);
 
@@ -16,12 +17,12 @@ function createFlexTask({summary_of_calls, conclusion}) {
         conclusion: conclusion,
     }
 
-    pause(1000);
+    pause(400);
     client.taskrouter.v1.workspaces('WSe4e39dc6456537e5ae125914db884fc5')
                     .tasks
                     .create({attributes: JSON.stringify({
                        taskAttributes
-                     }), workflowSid: 'WW8a673f3a4afa9c6b27f07faffe2030b9'})
+                     }), workflowSid: 'WW8a673f3a4afa9c6b27f07faffe2030b9', taskChannel:'TCe8671b79a03cc1cd406cd4dae51ed162'})
                     .then(task => console.log(task.sid));
     
     return "true"; 
