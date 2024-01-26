@@ -106,6 +106,30 @@ const tools = [
       }
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "createFlexTask",
+      description: "takes information from the call with the guest as well as information from the call with the host and packages up the data to be able to send it off to Flex.",
+      parameters: {
+        type: "object",
+        properties: {
+          summary_of_calls: {
+            type: "string",
+            description: "the transcript between assistant and host.",
+          },
+          conclusion: {
+            type: "string",
+            description: "the transcript between assistant and host.",
+          },
+        },
+        required: ["summary_of_calls", "conclusion"],
+      },
+      returns: {
+        type: "boolean"
+      }
+    },
+  },
 ];
 
 module.exports = tools;

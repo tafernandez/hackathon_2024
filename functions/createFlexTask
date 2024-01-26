@@ -1,0 +1,29 @@
+
+const client = require('twilio')(process.env.FLEX_TWILIO_ACCOUNT_SID, process.env.FLEX_TWILIO_AUTH_TOKEN);
+
+
+function createFlexTask({summary_of_calls, conclusion}) {
+    console.log("Printing the summary of the calls...: " + summary_of_calls);
+    console.log("Printing the summary of the calls...:" + conclusion);
+
+    function pause(milliseconds) {
+        var dt = new Date();
+        while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+    }
+
+    const taskAttributes = {
+        attribute1: summary_of_calls,
+        attribute2: conclusion,
+    }
+
+    pause(1000);
+    client.taskrouter.v1.workspaces('WSe4e39dc6456537e5ae125914db884fc5')
+                    .tasks
+                    .create({attributes: JSON.stringify({
+                       taskAttributes
+                     }), workflowSid: 'WW8a673f3a4afa9c6b27f07faffe2030b9'})
+                    .then(task => console.log(task.sid));
+    
+    return "true"; 
+}
+module.exports = createFlexTask;

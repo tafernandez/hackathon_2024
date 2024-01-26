@@ -24,7 +24,7 @@ app.post("/incoming", (req, res) => {
     <Connect>
       <Stream url="wss://${process.env.SERVER}/connection">
         <Parameter name="id" value="${process.env.TO_NUMBER}" />
-        <Parameter name="memSid" value="${req.query.memSid}" />
+        <Parameter name="memSid" value="${req.query.memSid}" /> 
       </Stream>
     </Connect>
   </Response>
@@ -33,7 +33,7 @@ app.post("/incoming", (req, res) => {
 
 app.ws("/connection", (ws, req) => {
   // Filled in from start message
-  let streamSid, memSid, profile, name;
+  let streamSid, memSid, profile, name; 
 
   ws.on("error", function(err) {
     console.log(err);
@@ -63,6 +63,7 @@ app.ws("/connection", (ws, req) => {
               You are now switching to talking to the host to get their side of the information.
               Give them the context of what you've learned and what you're calling about.
               What information do you need from the host at this point? Ask the questions you need to ask.
+               When you are done with the host, hang up and compile a summary of the call to be passed into the createFlexTask function
             `
           },
           { "role": "assistant",
