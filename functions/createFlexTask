@@ -4,7 +4,7 @@ const client = require('twilio')(process.env.FLEX_TWILIO_ACCOUNT_SID, process.en
 
 function createFlexTask({summary_of_calls, conclusion}) {
     console.log("Printing the summary of the calls...: " + summary_of_calls);
-    console.log("Printing the summary of the calls...:" + conclusion);
+    console.log("Printing the conclusion of the calls...:" + conclusion);
 
     function pause(milliseconds) {
         var dt = new Date();
@@ -12,8 +12,8 @@ function createFlexTask({summary_of_calls, conclusion}) {
     }
 
     const taskAttributes = {
-        attribute1: summary_of_calls,
-        attribute2: conclusion,
+        summary_of_calls: summary_of_calls,
+        conclusion: conclusion,
     }
 
     pause(1000);
